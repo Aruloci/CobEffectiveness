@@ -1,33 +1,33 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
-#issueTrackerURL = ""
+issueTrackerURL = "https://github.com/Aruloci/CobEffectiveness/issues"
 license = "GPL-3.0"
 
 [[mods]]
-modId = "cobeffectiveness"
+modId = "cobblemon_effectiveness"
 version = "${version}"
-displayName = "CobEffectiveness"
+displayName = "Cobblemon Effectiveness"
 authors = "Aruloci"
 description = '''
-A Minecraft mod for Cobblemon to display type effectiveness in Pokemon battles
+Display type effectiveness in Pokemon battles
 '''
-#logoFile = ""
+logoFile = "src/main/resources/assets/cobeffectiveness/icon.png"
 
-[[dependencies.cobeffectiveness]]
+[[dependencies.cobblemon_effectiveness]]
 modId = "neoforge"
 type = "required"
 versionRange = "[21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.cobeffectiveness]]
+[[dependencies.cobblemon_effectiveness]]
 modId = "minecraft"
 type = "required"
 versionRange = "[1.21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.cobeffectiveness]]
+[[dependencies.cobblemon_effectiveness]]
 modId="cobblemon"
 type="required"
 versionRange="[1.6.1,)"

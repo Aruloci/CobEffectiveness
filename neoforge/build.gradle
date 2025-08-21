@@ -68,3 +68,16 @@ remapJar {
     dependsOn shadowJar
     inputFile.set shadowJar.archiveFile
 }
+
+// copy to mods folder as running from IDE doesn't work
+tasks.register('copyToMinecraft', Copy) {
+    dependsOn remapJar
+    from remapJar.archiveFile
+    into "${System.getProperty('user.home')}${rootProject.neoforge_mods_folder}"
+
+    // always overwrite, even if file already exists
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    outputs.upToDateWhen { false }
+}
+
+build.finalizedBy copyToMinecraft

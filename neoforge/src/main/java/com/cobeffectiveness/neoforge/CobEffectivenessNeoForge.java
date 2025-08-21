@@ -5,6 +5,7 @@ import net.neoforged.fml.common.Mod;
 
 @Mod(CobEffectiveness.MOD_ID)
 public final class CobEffectivenessNeoForge {
+
     public CobEffectivenessNeoForge() {
         CobEffectiveness.initCommon();
     }
