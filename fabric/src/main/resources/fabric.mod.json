@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "cobblemon-effectiveness",
+  "id": "cobblemon_effectiveness",
   "version": "${version}",
   "name": "Cobblemon Effectiveness",
   "description": "Display type effectiveness in Pokemon battles",

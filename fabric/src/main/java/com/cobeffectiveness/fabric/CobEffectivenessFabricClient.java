@@ -12,9 +12,8 @@ public final class CobEffectivenessFabricClient implements ClientModInitializer 
 
     @Override
     public void onInitializeClient() {
-        CobEffectiveness.LOGGER.info("Client init started");
+        CobEffectiveness.initCommon();
 
-        // Render hook
         HudRenderCallback.EVENT.register((DrawContext dc, RenderTickCounter t) -> hud.render(dc));
     }
 }

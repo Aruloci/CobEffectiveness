@@ -4,6 +4,8 @@ import com.cobblemon.mod.common.client.gui.battle.BattleOverlay;
 import com.cobeffectiveness.battle.OpponentSnapshot;
 import com.cobeffectiveness.type.Type;
 import com.cobeffectiveness.type.EffectivenessChart;
+import com.cobeffectiveness.ui.IconRenderer;
+import com.cobeffectiveness.ui.PanelRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
@@ -25,7 +27,7 @@ public final class EffectivenessHud {
 
     public void render(DrawContext dc) {
         OpponentSnapshot.current().ifPresent(opponentTypes -> {
-            if (opponentTypes.isEmpty()) return; // just in case
+            if (opponentTypes.isEmpty()) return;
 
             Map<Double, Set<Type>> groups = EffectivenessChart.attackersByMultipliers(opponentTypes, 4.0, 2.0);
             var fourX = groups.get(4.0);

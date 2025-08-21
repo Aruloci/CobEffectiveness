@@ -86,7 +86,7 @@ remapJar {
 tasks.register('copyToMinecraft', Copy) {
     dependsOn remapJar
     from remapJar.archiveFile
-    into "${System.getProperty('user.home')}$rootProject.mods_folder"
+    into "${System.getProperty('user.home')}$rootProject.fabric_mods_folder"
 
     // always overwrite, even if file already exists
     duplicatesStrategy = DuplicatesStrategy.INCLUDE

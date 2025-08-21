@@ -1,4 +1,4 @@
-package com.cobeffectiveness.fabric.ui;
+package com.cobeffectiveness.ui;
 
 import com.cobeffectiveness.type.Type;
 import com.cobeffectiveness.type.TypeIcon;
