@@ -1,8 +1,7 @@
 package com.cobeffectiveness.neoforge;
 
-import net.neoforged.fml.common.Mod;
-
 import com.cobeffectiveness.CobEffectiveness;
+import net.neoforged.fml.common.Mod;
 
 @Mod(CobEffectiveness.MOD_ID)
 public final class CobEffectivenessNeoForge {

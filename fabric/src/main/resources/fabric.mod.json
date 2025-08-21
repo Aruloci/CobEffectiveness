@@ -1,35 +1,31 @@
 {
   "schemaVersion": 1,
-  "id": "cobeffectiveness",
+  "id": "cobblemon-effectiveness",
   "version": "${version}",
-  "name": "CobEffectiveness",
-  "description": "A Minecraft mod for Cobblemon to display type effectiveness in Pokemon battles",
+  "name": "Cobblemon Effectiveness",
+  "description": "Display type effectiveness in Pokemon battles",
   "authors": [
     "Aruloci"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/Aruloci/CobEffectiveness"
   },
   "license": "GPL-3.0",
   "icon": "assets/cobeffectiveness/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": [
-      "com.cobeffectiveness.fabric.CobEffectivenessFabric"
-    ],
     "client": [
-      "com.cobeffectiveness.fabric.client.ExampleModFabricClient"
+      "com.cobeffectiveness.fabric.CobEffectivenessFabricClient"
     ]
   },
   "mixins": [
     "cobeffectiveness.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.17.2",
+    "fabricloader": ">=0.16.4",
     "minecraft": "~1.21.1",
     "java": ">=21",
-    "fabric-api": "*"
+    "cobblemon": ">=1.6.1"
   },
   "suggests": {
     "another-mod": "*"
