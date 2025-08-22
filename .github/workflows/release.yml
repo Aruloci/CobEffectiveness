@@ -39,9 +39,10 @@ jobs:
         id: artifacts
         shell: bash
         run: |
-          set -euo pipefail
-          FAB_JAR=$(ls fabric/build/libs/*fabric-*.jar | head -n1 || true)
-          NF_JAR=$(ls neoforge/build/libs/*neoforge-*.jar | head -n1 || true)
+          set -euo pipefail          
+          FAB_JAR=$(ls fabric/build/libs/*-fabric-*.jar | grep -v -E '(-dev-|sources)' | head -n1 || true)
+          NF_JAR=$(ls neoforge/build/libs/*-neoforge-*.jar | grep -v -E '(-dev-|sources)' | head -n1 || true)
+
 
           if [[ -z "${FAB_JAR}" ]]; then
             echo "❌ Fabric jar not found in fabric/build/libs"; exit 1
