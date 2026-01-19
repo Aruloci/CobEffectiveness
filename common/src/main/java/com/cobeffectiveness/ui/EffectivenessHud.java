@@ -1,14 +1,13 @@
-package com.cobeffectiveness.fabric.ui;
+package com.cobeffectiveness.ui;
 
 import com.cobblemon.mod.common.client.gui.battle.BattleOverlay;
+import com.cobeffectiveness.CobEffectivenessMod;
 import com.cobeffectiveness.battle.OpponentSnapshot;
 import com.cobeffectiveness.type.EffectivenessChart;
 import com.cobeffectiveness.type.Type;
-import com.cobeffectiveness.ui.IconRenderer;
-import com.cobeffectiveness.ui.PanelRenderer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 
 import java.util.Map;
 import java.util.Set;
@@ -23,9 +22,9 @@ public final class EffectivenessHud {
     private static final int ROW_GAP = 4;
     private static final int DIV_H = 1;
 
-    private final MinecraftClient mc = MinecraftClient.getInstance();
+    private final Minecraft mc = Minecraft.getInstance();
 
-    public void render(DrawContext dc) {
+    public void render(GuiGraphics graphics) {
         OpponentSnapshot.current().ifPresent(opponentTypes -> {
             if (opponentTypes.isEmpty()) return;
 
@@ -34,13 +33,13 @@ public final class EffectivenessHud {
             var twoX = groups.get(2.0);
             if ((fourX == null || fourX.isEmpty()) && (twoX == null || twoX.isEmpty())) return;
 
-            final int fontH = mc.textRenderer.fontHeight;
+            final int fontH = mc.fontFilterFishy.lineHeight;
             final int iconH = IconRenderer.rowHeight();
 
             final String L4 = "×4";
             final String L2 = "×2";
-            final int L4w = mc.textRenderer.getWidth(L4);
-            final int L2w = mc.textRenderer.getWidth(L2);
+            final int L4w = mc.fontFilterFishy.width(L4);
+            final int L2w = mc.fontFilterFishy.width(L2);
 
             final int fourW = IconRenderer.rowWidth(fourX != null ? fourX.size() : 0);
             final int twoW = IconRenderer.rowWidth(twoX != null ? twoX.size() : 0);
@@ -59,12 +58,12 @@ public final class EffectivenessHud {
 
             final int panelW = innerW + PAD_X * 2;
 
-            int sw = mc.getWindow().getScaledWidth();
+            int sw = mc.getWindow().getGuiScaledWidth();
             int x = sw - RIGHT_MARGIN - panelW;
             int y = TOP_OFFSET;
 
             // panel
-            PanelRenderer.drawPanel(dc, x, y, panelW, panelH);
+            PanelRenderer.drawPanel(graphics, x, y, panelW, panelH);
 
             // content
             int cursorY = y + PAD_Y;
@@ -73,23 +72,23 @@ public final class EffectivenessHud {
             // ×4 row
             if (row4W > 0) {
                 int rowX = x + PAD_X + (innerW - row4W) / 2;
-                dc.drawTextWithShadow(mc.textRenderer, Text.literal(L4), rowX, cursorY + labelYOffset, 0xFFFFE066);
-                IconRenderer.drawTypes(dc, rowX + L4w + LABEL_GAP, cursorY, fourX);
+                graphics.drawString(mc.fontFilterFishy, Component.literal(L4), rowX, cursorY + labelYOffset, 0xFFFFE066);
+                IconRenderer.drawTypes(graphics, rowX + L4w + LABEL_GAP, cursorY, fourX);
                 cursorY += iconH;
             }
 
             // divider
             if (row4W > 0 && row2W > 0) {
                 cursorY += ROW_GAP;
-                PanelRenderer.drawDivider(dc, x + PAD_X, cursorY, innerW);
+                PanelRenderer.drawDivider(graphics, x + PAD_X, cursorY, innerW);
                 cursorY += DIV_H + ROW_GAP;
             }
 
             // ×2 row
             if (row2W > 0) {
                 int rowX = x + PAD_X + (innerW - row2W) / 2;
-                dc.drawTextWithShadow(mc.textRenderer, Text.literal(L2), rowX, cursorY + labelYOffset, 0xFFB7C0FF);
-                IconRenderer.drawTypes(dc, rowX + L2w + LABEL_GAP, cursorY, twoX);
+                graphics.drawString(mc.fontFilterFishy, Component.literal(L2), rowX, cursorY + labelYOffset, 0xFFB7C0FF);
+                IconRenderer.drawTypes(graphics, rowX + L2w + LABEL_GAP, cursorY, twoX);
             }
         });
     }

@@ -1,6 +1,6 @@
 package com.cobeffectiveness.type;
 
-import com.cobeffectiveness.CobEffectiveness;
+import com.cobeffectiveness.CobEffectivenessMod;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -16,7 +16,7 @@ public final class ChartParser {
     public static void applyFromStream(InputStream in) {
         ChartJson json = GSON.fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), ChartJson.class);
         if (json == null) {
-            CobEffectiveness.logWarn("Chart JSON is empty");
+            CobEffectivenessMod.logWarn("Chart JSON is empty");
             return;
         }
 

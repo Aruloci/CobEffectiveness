@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "cobblemon_effectiveness",
+  "id": "cobeffectiveness",
   "version": "${version}",
   "name": "Cobblemon Effectiveness",
   "description": "Display type effectiveness in Pokemon battles",
@@ -15,7 +15,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.cobeffectiveness.fabric.CobEffectivenessFabricClient"
+      "com.cobeffectiveness.fabric.CobEffectivenessFabric"
     ]
   },
   "mixins": [

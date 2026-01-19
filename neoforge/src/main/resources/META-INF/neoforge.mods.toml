@@ -4,7 +4,7 @@ issueTrackerURL = "https://github.com/Aruloci/CobEffectiveness/issues"
 license = "GPL-3.0"
 
 [[mods]]
-modId = "cobblemon_effectiveness"
+modId = "cobeffectiveness"
 version = "${version}"
 displayName = "Cobblemon Effectiveness"
 authors = "Aruloci"
@@ -13,21 +13,21 @@ Display type effectiveness in Pokemon battles
 '''
 logoFile = "src/main/resources/assets/cobeffectiveness/icon.png"
 
-[[dependencies.cobblemon_effectiveness]]
+[[dependencies.cobeffectiveness]]
 modId = "neoforge"
 type = "required"
 versionRange = "[21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.cobblemon_effectiveness]]
+[[dependencies.cobeffectiveness]]
 modId = "minecraft"
 type = "required"
 versionRange = "[1.21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.cobblemon_effectiveness]]
+[[dependencies.cobeffectiveness]]
 modId="cobblemon"
 type="required"
 versionRange="[1.6.1,)"

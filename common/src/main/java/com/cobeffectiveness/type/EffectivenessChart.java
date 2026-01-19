@@ -1,6 +1,7 @@
 package com.cobeffectiveness.type;
 
-import com.cobeffectiveness.CobEffectiveness;
+
+import com.cobeffectiveness.CobEffectivenessMod;
 
 import java.util.*;
 import java.util.function.Function;
@@ -26,7 +27,7 @@ public final class EffectivenessChart {
                 Type atk = nameMapper.apply(r.attack);
                 Type def = nameMapper.apply(r.defend);
                 if (atk == null || def == null) {
-                    CobEffectiveness.logWarn("Unknown type in rule: {} -> {}", String.valueOf(r.attack), String.valueOf(r.defend));
+                    CobEffectivenessMod.logWarn("Unknown type in rule: {} -> {}", String.valueOf(r.attack), String.valueOf(r.defend));
                     continue;
                 }
                 MAP.get(atk).put(def, r.mult);

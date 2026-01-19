@@ -1,9 +1,11 @@
 {
   "required": true,
-  "package": "com.CobEffectiveness2.mixin",
+  "package": "com.cobeffectiveness.mixin",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
+    "BattleGUIMixin",
+    "MinecraftMixin"
   ],
   "mixins": [
   ],

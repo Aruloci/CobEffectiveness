@@ -1,6 +1,6 @@
 package com.cobeffectiveness.ui;
 
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 
 public final class PanelRenderer {
     private static final int BG = 0xE01E1E1E;
@@ -10,13 +10,13 @@ public final class PanelRenderer {
 
     private PanelRenderer() {}
 
-    public static void drawPanel(DrawContext dc, int x, int y, int w, int h) {
-        dc.fill(x, y, x + w, y + h, BG);
-        dc.drawBorder(x, y, w, h, BORDER);
-        dc.drawBorder(x + 1, y + 1, w - 2, h - 2, BORDER_IN);
+    public static void drawPanel(GuiGraphics graphics, int x, int y, int w, int h) {
+        graphics.fill(x, y, x + w, y + h, BG);
+        graphics.renderOutline(x, y, w, h, BORDER);
+        graphics.renderOutline(x + 1, y + 1, w - 2, h - 2, BORDER_IN);
     }
 
-    public static void drawDivider(DrawContext dc, int x, int y, int w) {
-        dc.fill(x, y, x + w, y + 1, DIVIDER);
+    public static void drawDivider(GuiGraphics graphics, int x, int y, int w) {
+        graphics.fill(x, y, x + w, y + 1, DIVIDER);
     }
 }

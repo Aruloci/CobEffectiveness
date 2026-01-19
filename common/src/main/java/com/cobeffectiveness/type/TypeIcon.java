@@ -1,6 +1,7 @@
 package com.cobeffectiveness.type;
 
-import com.cobeffectiveness.CobEffectiveness;
+
+import com.cobeffectiveness.CobEffectivenessMod;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -38,7 +39,7 @@ public final class TypeIcon {
                 int row = i / COLS;
                 POS.put(type, new Pos(col * TILE_W, row * TILE_H));
             } catch (IllegalArgumentException ignored) {
-                CobEffectiveness.logWarn("Unknown type in JSON: {}", cobName);
+                CobEffectivenessMod.logWarn("Unknown type in JSON: {}", cobName);
             }
         }
     }

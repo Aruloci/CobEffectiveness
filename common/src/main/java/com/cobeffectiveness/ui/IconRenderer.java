@@ -3,23 +3,23 @@ package com.cobeffectiveness.ui;
 import com.cobeffectiveness.compat.Compat;
 import com.cobeffectiveness.type.Type;
 import com.cobeffectiveness.type.TypeIcon;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
 
 public final class IconRenderer {
-    private static Identifier TYPES_SHEET = resolveTypesSheet();
+    private static ResourceLocation TYPES_SHEET = resolveTypesSheet();
     public static final int GAP = 2;
 
     private IconRenderer() {}
 
-    public static void drawTypes(DrawContext dc, int x, int y, Collection<Type> types) {
+    public static void drawTypes(GuiGraphics graphics, int x, int y, Collection<Type> types) {
         int i = 0;
         for (Type t : types) {
             var uv = TypeIcon.pos(t);
             if (uv == null) continue;
-            dc.drawTexture(
+            graphics.blit(
                     TYPES_SHEET,
                     x + i * (TypeIcon.TILE_W + GAP), y,
                     uv.u(), uv.v(),
@@ -30,8 +30,8 @@ public final class IconRenderer {
         }
     }
 
-    private static Identifier resolveTypesSheet() {
-        return Identifier.of(Compat.getNameSpace(), Compat.TEXTURE_PATH);
+    private static ResourceLocation resolveTypesSheet() {
+        return ResourceLocation.fromNamespaceAndPath(Compat.getNameSpace(), Compat.TEXTURE_PATH);
     }
 
     public static void onResourcesReloaded() {

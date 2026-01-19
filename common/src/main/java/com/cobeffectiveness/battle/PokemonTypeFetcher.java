@@ -1,4 +1,4 @@
-package com.cobeffectiveness.neoforge.battle;
+package com.cobeffectiveness.battle;
 
 import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.battle.ActiveClientBattlePokemon;
@@ -7,10 +7,9 @@ import com.cobblemon.mod.common.client.battle.ClientBattlePokemon;
 import com.cobblemon.mod.common.client.battle.ClientBattleSide;
 import com.cobblemon.mod.common.pokemon.FormData;
 import com.cobblemon.mod.common.pokemon.Species;
-import com.cobeffectiveness.CobEffectiveness;
-import com.cobeffectiveness.battle.OpponentSnapshot;
+import com.cobeffectiveness.CobEffectivenessMod;
 import com.cobeffectiveness.type.Type;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -21,7 +20,7 @@ public final class PokemonTypeFetcher {
     }
 
     public static void refreshFromCurrentBattle() {
-        MinecraftClient mc = MinecraftClient.getInstance();
+        Minecraft mc = Minecraft.getInstance();
         if (mc == null || mc.player == null) {
             OpponentSnapshot.clear();
             return;
@@ -36,7 +35,7 @@ public final class PokemonTypeFetcher {
         ClientBattleSide side1 = battle.getSide1();
         ClientBattleSide side2 = battle.getSide2();
 
-        UUID me = mc.player.getUuid();
+        UUID me = mc.player.getUUID();
         boolean iAmSide1 = side1.getActors().stream().anyMatch(a -> me.equals(a.getUuid()));
         ClientBattleSide enemy = iAmSide1 ? side2 : side1;
 
@@ -65,13 +64,13 @@ public final class PokemonTypeFetcher {
         try {
             into.add(Type.fromCobblemon(form.getPrimaryType().getName()));
         } catch (IllegalArgumentException ex) {
-            CobEffectiveness.logWarn("Unknown primary type '{}'", form.getPrimaryType().getName());
+            CobEffectivenessMod.logWarn("Unknown primary type '{}'", form.getPrimaryType().getName());
         }
         if (form.getSecondaryType() != null) {
             try {
                 into.add(Type.fromCobblemon(form.getSecondaryType().getName()));
             } catch (IllegalArgumentException ex) {
-                CobEffectiveness.logWarn("Unknown secondary type '{}'", form.getSecondaryType().getName());
+                CobEffectivenessMod.logWarn("Unknown secondary type '{}'", form.getSecondaryType().getName());
             }
         }
     }

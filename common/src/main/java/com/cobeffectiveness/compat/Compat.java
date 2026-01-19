@@ -1,6 +1,6 @@
 package com.cobeffectiveness.compat;
 
-import com.cobeffectiveness.CobEffectiveness;
+import com.cobeffectiveness.CobEffectivenessMod;
 
 public final class Compat {
     public static final String MODID_GEB = "gravels_extended_battles";
@@ -16,7 +16,7 @@ public final class Compat {
 
     public static void init(boolean gebLoaded) {
         flavor = gebLoaded ? Flavor.GEB : Flavor.VANILLA;
-        CobEffectiveness.logInfo("Effectiveness flavor: {}", flavor);
+        CobEffectivenessMod.logInfo("Effectiveness flavor: {}", flavor);
     }
 
     public static String getNameSpace() {
