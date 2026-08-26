@@ -25,6 +25,13 @@ configurations {
     }
 }
 
+repositories {
+    maven {
+        name = 'Terraformers'
+        url = 'https://maven.terraformersmc.com/releases'
+    }
+}
+
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
     modImplementation "net.fabricmc:fabric-language-kotlin:${rootProject.fabric_kotlin_version}"
@@ -33,6 +40,13 @@ dependencies {
 
     // Cobblemon (MDK coordinates)
     modImplementation "com.cobblemon:fabric:${rootProject.cobblemon_version}"
+
+    // Compile the mod list config button against ModMenu, and have it present in the dev client so
+    // the button can actually be clicked. modLocalRuntime never reaches the published jar or POM,
+    // so ModMenu stays optional for players: fabric.mod.json does not depend on it, and the
+    // "modmenu" entrypoint is only ever read by ModMenu itself.
+    modCompileOnly "com.terraformersmc:modmenu:${rootProject.modmenu_version}"
+    modLocalRuntime "com.terraformersmc:modmenu:${rootProject.modmenu_version}"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')

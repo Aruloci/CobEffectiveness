@@ -10,7 +10,7 @@ public final class Compat {
 
     public enum Flavor { VANILLA, GEB }
 
-    private static Flavor flavor = Flavor.VANILLA;
+    private static volatile Flavor flavor = Flavor.VANILLA;
 
     private Compat() {}
 
@@ -19,14 +19,16 @@ public final class Compat {
         CobEffectivenessMod.logInfo("Effectiveness flavor: {}", flavor);
     }
 
-    public static String getNameSpace() {
-        return flavor() == Flavor.GEB ? Compat.GEB_NAMESPACE : COBBLEMON_NAMESPACE;
+    public static Flavor flavor() {
+        return flavor;
     }
 
-    public static String getJsonPath() {
-        String name = (Compat.flavor() == Compat.Flavor.GEB) ? "geb_default" : "vanilla";
-        return "charts/" + name + ".json";
+    /** Namespace of the mod that owns the type icon sheet. */
+    public static String namespace() {
+        return flavor() == Flavor.GEB ? GEB_NAMESPACE : COBBLEMON_NAMESPACE;
     }
 
-    public static Flavor flavor() { return flavor; }
+    public static String chartPath() {
+        return "charts/" + (flavor() == Flavor.GEB ? "geb_default" : "vanilla") + ".json";
+    }
 }

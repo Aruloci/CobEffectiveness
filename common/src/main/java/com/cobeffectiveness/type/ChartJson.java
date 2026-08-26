@@ -1,10 +1,18 @@
 package com.cobeffectiveness.type;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public final class ChartJson {
+    /** A sheet slot that deliberately holds no usable type, e.g. Gravelmon's "???" tile. */
+    public static final String PLACEHOLDER = "???";
+
     public String name;
-    public double default_ = 1.0;
+
+    @SerializedName("default")
+    public double defaultMultiplier = 1.0;
+
     public Tiles tiles;
     public List<String> order;
     public List<Rule> rules;

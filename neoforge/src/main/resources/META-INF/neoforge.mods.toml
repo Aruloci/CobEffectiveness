@@ -11,28 +11,31 @@ authors = "Aruloci"
 description = '''
 Display type effectiveness in Pokemon battles
 '''
-logoFile = "src/main/resources/assets/cobeffectiveness/icon.png"
+# Resolved against the jar root, not the build tree.
+logoFile = "assets/cobeffectiveness/icon.png"
+# Client only HUD mod: never a reason to refuse a server connection over it.
+displayTest = "IGNORE_ALL_VERSIONS"
 
 [[dependencies.cobeffectiveness]]
 modId = "neoforge"
 type = "required"
 versionRange = "[21.1,)"
 ordering = "NONE"
-side = "BOTH"
+side = "CLIENT"
 
 [[dependencies.cobeffectiveness]]
 modId = "minecraft"
 type = "required"
 versionRange = "[1.21.1,)"
 ordering = "NONE"
-side = "BOTH"
+side = "CLIENT"
 
 [[dependencies.cobeffectiveness]]
 modId="cobblemon"
 type="required"
 versionRange="[1.6.1,)"
 ordering="NONE"
-side="BOTH"
+side="CLIENT"
 
 [[mixins]]
 config = "cobeffectiveness.mixins.json"

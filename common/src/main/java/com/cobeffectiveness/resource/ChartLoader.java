@@ -1,4 +1,4 @@
-package com.cobeffectiveness.hook;
+package com.cobeffectiveness.resource;
 
 import com.cobeffectiveness.CobEffectivenessMod;
 import com.cobeffectiveness.compat.Compat;
@@ -7,7 +7,6 @@ import com.cobeffectiveness.ui.IconRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.Resource;
-import net.neoforged.bus.api.SubscribeEvent;
 
 import java.io.InputStream;
 import java.util.Optional;
@@ -18,29 +17,31 @@ public final class ChartLoader {
     private ChartLoader() {}
 
     private static ResourceLocation chartPath() {
-        return ResourceLocation.fromNamespaceAndPath(CobEffectivenessMod.NAMESPACE, Compat.getJsonPath());
+        return ResourceLocation.fromNamespaceAndPath(CobEffectivenessMod.NAMESPACE, Compat.chartPath());
     }
 
-    @SubscribeEvent
     public static void registerReload(ReloadableResourceManager resourceManager) {
         resourceManager.registerReloadListener((synchronizer, manager, prepProfiler, reloadProfiler, backgroundExecutor, gameExecutor) -> {
-            IconRenderer.onResourcesReloaded(); // reload sheet
+            IconRenderer.onResourcesReloaded();
+
             CompletableFuture<Void> parseTask = CompletableFuture.runAsync(() -> {
                 ResourceLocation path = chartPath();
                 try {
-                    Optional<Resource> res = manager.getResource(path);
-                    if (res.isEmpty()) {
+                    Optional<Resource> resource = manager.getResource(path);
+                    if (resource.isEmpty()) {
                         CobEffectivenessMod.logWarn("Effectiveness chart not found '{}'", path);
                         return;
                     }
-                    try (InputStream in = res.get().open()) {
+                    try (InputStream in = resource.get().open()) {
                         ChartParser.applyFromStream(in);
                     }
+                    // Logged here, not at registration time, so success means the chart really parsed.
+                    CobEffectivenessMod.logInfo("Loaded effectiveness chart from '{}'", path);
                 } catch (Exception ex) {
                     CobEffectivenessMod.logError("Failed to load effectiveness chart '{}'", path, ex);
                 }
             }, backgroundExecutor);
-            CobEffectivenessMod.logInfo("Successfully loaded effectiveness chart from '{}'", chartPath());
+
             return parseTask.thenCompose(synchronizer::wait);
         });
     }

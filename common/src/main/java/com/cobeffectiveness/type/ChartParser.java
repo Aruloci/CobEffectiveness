@@ -19,17 +19,16 @@ public final class ChartParser {
             CobEffectivenessMod.logWarn("Chart JSON is empty");
             return;
         }
+        apply(json);
+    }
 
-        EffectivenessChart.configure(json, name -> {
-            try {
-                return Type.fromCobblemon(name);
-            } catch (Exception e) {
-                return null;
-            }
-        });
+    public static void apply(ChartJson json) {
+        EffectivenessChart.Parsed chart = EffectivenessChart.from(json);
+        chart.warnings().forEach(CobEffectivenessMod::logWarn);
+        EffectivenessChart.publish(chart.chart());
 
-        if (json.tiles != null) {
-            TypeIcon.configure(json.tiles.cols, json.tiles.rows, json.tiles.tile_w, json.tiles.tile_h, json.order);
-        }
+        IconSheet.Parsed sheet = IconSheet.from(json.tiles, json.order);
+        sheet.warnings().forEach(CobEffectivenessMod::logWarn);
+        IconSheet.publish(sheet.sheet());
     }
 }

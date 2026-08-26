@@ -16,6 +16,9 @@
   "entrypoints": {
     "client": [
       "com.cobeffectiveness.fabric.CobEffectivenessFabric"
+    ],
+    "modmenu": [
+      "com.cobeffectiveness.fabric.ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -26,8 +29,5 @@
     "minecraft": "~1.21.1",
     "java": ">=21",
     "cobblemon": ">=1.6.1"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }

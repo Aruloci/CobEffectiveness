@@ -1,95 +1,129 @@
 package com.cobeffectiveness.ui;
 
-import com.cobblemon.mod.common.client.gui.battle.BattleOverlay;
-import com.cobeffectiveness.CobEffectivenessMod;
-import com.cobeffectiveness.battle.OpponentSnapshot;
-import com.cobeffectiveness.type.EffectivenessChart;
-import com.cobeffectiveness.type.Type;
+import com.cobeffectiveness.config.CobConfig;
+import com.cobeffectiveness.config.ConfigStore;
+import com.cobeffectiveness.config.PanelId;
+import com.cobeffectiveness.config.PanelPlacement;
+import com.cobeffectiveness.type.IconSheet;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
 
+import java.util.EnumMap;
 import java.util.Map;
-import java.util.Set;
 
+/**
+ * Paints the panels wherever {@link HudArrangement} has placed them.
+ *
+ * <p>All geometry comes from {@link HudLayout} and {@link PanelResolver}; this class only supplies
+ * text and icon sizes and then draws what it is handed.
+ */
 public final class EffectivenessHud {
-    private static final int RIGHT_MARGIN = BattleOverlay.HORIZONTAL_INSET;
-    private static final int TOP_OFFSET = BattleOverlay.COMPACT_TILE_TEXTURE_HEIGHT;
 
-    private static final int PAD_X = 6;
-    private static final int PAD_Y = 6;
-    private static final int LABEL_GAP = 4;
-    private static final int ROW_GAP = 4;
-    private static final int DIV_H = 1;
-
-    private final Minecraft mc = Minecraft.getInstance();
-
+    /** Draws every enabled panel at its resolved position. */
     public void render(GuiGraphics graphics) {
-        OpponentSnapshot.current().ifPresent(opponentTypes -> {
-            if (opponentTypes.isEmpty()) return;
+        CobConfig config = ConfigStore.get();
 
-            Map<Double, Set<Type>> groups = EffectivenessChart.attackersByMultipliers(opponentTypes, 4.0, 2.0);
-            var fourX = groups.get(4.0);
-            var twoX = groups.get(2.0);
-            if ((fourX == null || fourX.isEmpty()) && (twoX == null || twoX.isEmpty())) return;
+        Map<PanelId, HudModel> models = new EnumMap<>(PanelId.class);
+        models.put(PanelId.NAME, HudState.nameModel());
+        models.put(PanelId.TYPES, HudState.typesModel());
+        models.put(PanelId.MOVES, HudState.movesModel());
 
-            final int fontH = mc.fontFilterFishy.lineHeight;
-            final int iconH = IconRenderer.rowHeight();
+        render(graphics, HudArrangement.of(models, placementsOf(config), metrics(),
+                screenWidth(), screenHeight()));
+    }
 
-            final String L4 = "×4";
-            final String L2 = "×2";
-            final int L4w = mc.fontFilterFishy.width(L4);
-            final int L2w = mc.fontFilterFishy.width(L2);
+    /** Draws a prepared arrangement, shared with the drag screen. */
+    public void render(GuiGraphics graphics, HudArrangement arrangement) {
+        Font font = font();
+        IconSheet sheet = IconSheet.current();
 
-            final int fourW = IconRenderer.rowWidth(fourX != null ? fourX.size() : 0);
-            final int twoW = IconRenderer.rowWidth(twoX != null ? twoX.size() : 0);
+        for (HudArrangement.Placed placed : arrangement.panels().values()) {
+            draw(graphics, placed, font, sheet);
+        }
+    }
 
-            final int row4W = (fourW > 0) ? (L4w + LABEL_GAP + fourW) : 0;
-            final int row2W = (twoW > 0) ? (L2w + LABEL_GAP + twoW) : 0;
+    private void draw(GuiGraphics graphics, HudArrangement.Placed placed, Font font, IconSheet sheet) {
+        // The layout was measured at the origin, so everything shifts by the resolved position.
+        int dx = placed.x();
+        int dy = placed.y();
 
-            final int innerW = Math.max(row4W, row2W);
-            if (innerW == 0) return;
+        for (HudLayout.Panel panel : placed.layout().panels()) {
+            PanelRenderer.drawPanel(graphics, panel.x() + dx, panel.y() + dy, panel.width(), panel.height());
 
-            int panelH = PAD_Y;
-            if (row4W > 0) panelH += iconH;
-            if (row4W > 0 && row2W > 0) panelH += ROW_GAP + DIV_H + ROW_GAP;
-            if (row2W > 0) panelH += iconH;
-            panelH += PAD_Y;
+            for (HudLayout.PlacedElement element : panel.elements()) {
+                HudLayout.Element content = element.element();
 
-            final int panelW = innerW + PAD_X * 2;
+                if (content.isDivider()) {
+                    PanelRenderer.drawDivider(graphics, element.x() + dx, element.y() + dy, element.width());
+                    continue;
+                }
 
-            int sw = mc.getWindow().getGuiScaledWidth();
-            int x = sw - RIGHT_MARGIN - panelW;
-            int y = TOP_OFFSET;
+                // Continuation lines of a wrapped row keep the label for alignment but must not
+                // print it again.
+                if (content.showLabel() && !content.text().isEmpty()) {
+                    graphics.drawString(font, content.text(),
+                            element.x() + dx, element.textY() + dy, content.color());
+                }
 
-            // panel
-            PanelRenderer.drawPanel(graphics, x, y, panelW, panelH);
+                if (!content.types().isEmpty()) {
+                    IconRenderer.draw(graphics, sheet, element.iconX() + dx, element.iconY() + dy,
+                            content.types());
+                }
 
-            // content
-            int cursorY = y + PAD_Y;
-            int labelYOffset = (iconH - fontH) / 2 + 1;
+                if (!content.trailing().isEmpty()) {
+                    graphics.drawString(font, content.trailing(),
+                            element.trailingX() + dx, element.textY() + dy, content.trailingColor());
+                }
+            }
+        }
+    }
 
-            // ×4 row
-            if (row4W > 0) {
-                int rowX = x + PAD_X + (innerW - row4W) / 2;
-                graphics.drawString(mc.fontFilterFishy, Component.literal(L4), rowX, cursorY + labelYOffset, 0xFFFFE066);
-                IconRenderer.drawTypes(graphics, rowX + L4w + LABEL_GAP, cursorY, fourX);
-                cursorY += iconH;
+    public static Map<PanelId, PanelPlacement> placementsOf(CobConfig config) {
+        Map<PanelId, PanelPlacement> placements = new EnumMap<>(PanelId.class);
+        placements.put(PanelId.NAME, config.namePanel);
+        placements.put(PanelId.TYPES, config.typesPanel);
+        placements.put(PanelId.MOVES, config.movesPanel);
+        return placements;
+    }
+
+    public static int screenWidth() {
+        return Minecraft.getInstance().getWindow().getGuiScaledWidth();
+    }
+
+    public static int screenHeight() {
+        return Minecraft.getInstance().getWindow().getGuiScaledHeight();
+    }
+
+    public static Font font() {
+        return Minecraft.getInstance().fontFilterFishy;
+    }
+
+    /** Shared by the HUD and the drag screen so both measure identically. */
+    public static HudLayout.Metrics metrics() {
+        Font font = font();
+        IconSheet sheet = IconSheet.current();
+
+        return new HudLayout.Metrics() {
+            @Override
+            public int textWidth(String text) {
+                return font.width(text);
             }
 
-            // divider
-            if (row4W > 0 && row2W > 0) {
-                cursorY += ROW_GAP;
-                PanelRenderer.drawDivider(graphics, x + PAD_X, cursorY, innerW);
-                cursorY += DIV_H + ROW_GAP;
+            @Override
+            public int fontHeight() {
+                return font.lineHeight;
             }
 
-            // ×2 row
-            if (row2W > 0) {
-                int rowX = x + PAD_X + (innerW - row2W) / 2;
-                graphics.drawString(mc.fontFilterFishy, Component.literal(L2), rowX, cursorY + labelYOffset, 0xFFB7C0FF);
-                IconRenderer.drawTypes(graphics, rowX + L2w + LABEL_GAP, cursorY, twoX);
+            @Override
+            public int iconRowWidth(int count) {
+                return IconRenderer.rowWidth(sheet, count);
             }
-        });
+
+            @Override
+            public int iconHeight() {
+                return sheet.tileH();
+            }
+        };
     }
 }

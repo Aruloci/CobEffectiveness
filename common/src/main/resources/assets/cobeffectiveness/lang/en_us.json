@@ -1,0 +1,29 @@
+{
+  "cobeffectiveness.config.title": "Cobblemon Effectiveness",
+  "cobeffectiveness.config.toggle": "%s: %s",
+
+  "cobeffectiveness.config.group_panels": "Panels",
+  "cobeffectiveness.config.group_behaviour": "Behaviour",
+  "cobeffectiveness.config.group_rows": "Effectiveness rows",
+
+  "cobeffectiveness.config.panel_name": "Name",
+  "cobeffectiveness.config.panel_name.tip": "Names the Pokemon you are facing and shows its own types.",
+  "cobeffectiveness.config.panel_types": "Effectiveness",
+  "cobeffectiveness.config.panel_types.tip": "Which attack types are strong or weak against the opponent.",
+  "cobeffectiveness.config.panel_moves": "Your moves",
+  "cobeffectiveness.config.panel_moves.tip": "Scores each of your four moves against the opponent. Hidden until it is your turn.",
+
+  "cobeffectiveness.config.hover_only": "Hover only",
+  "cobeffectiveness.config.hover_only.tip": "Show the panels only while the pointer is over an opponent's battle tile.",
+
+  "cobeffectiveness.config.row.tip": "Show a %s row in the effectiveness panel.",
+
+  "cobeffectiveness.config.move": "Move panels...",
+  "cobeffectiveness.config.move.tip": "Drag each panel where you want it. They snap to each other.",
+  "cobeffectiveness.config.reset": "Reset to defaults",
+  "cobeffectiveness.config.reset.tip": "Put every setting and all three panel positions back to how they started.",
+
+  "cobeffectiveness.config.position_title": "Drag the panels into place",
+  "cobeffectiveness.config.position_hint": "Drag any panel to move it. They snap to each other.",
+  "cobeffectiveness.config.position_hint2": "Press Escape to save"
+}

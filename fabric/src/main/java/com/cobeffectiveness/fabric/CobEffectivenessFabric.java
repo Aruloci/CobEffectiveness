@@ -13,6 +13,6 @@ public final class CobEffectivenessFabric implements ClientModInitializer {
         //Check for GEB
         Compat.init(FabricLoader.getInstance().isModLoaded(Compat.MODID_GEB));
 
-        CobEffectivenessMod.init();
+        CobEffectivenessMod.init(FabricLoader.getInstance().getConfigDir());
     }
 }

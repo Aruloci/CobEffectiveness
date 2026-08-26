@@ -1,49 +1,50 @@
 package com.cobeffectiveness.ui;
 
 import com.cobeffectiveness.compat.Compat;
+import com.cobeffectiveness.type.IconSheet;
 import com.cobeffectiveness.type.Type;
-import com.cobeffectiveness.type.TypeIcon;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Collection;
+import java.util.List;
 
 public final class IconRenderer {
-    private static ResourceLocation TYPES_SHEET = resolveTypesSheet();
     public static final int GAP = 2;
+
+    /** Owned by Cobblemon or Gravelmon, so it is re-resolved whenever resources reload. */
+    private static volatile ResourceLocation typesSheet = resolve();
 
     private IconRenderer() {}
 
-    public static void drawTypes(GuiGraphics graphics, int x, int y, Collection<Type> types) {
-        int i = 0;
-        for (Type t : types) {
-            var uv = TypeIcon.pos(t);
+    public static void draw(GuiGraphics graphics, IconSheet sheet, int x, int y, List<Type> types) {
+        ResourceLocation texture = typesSheet;
+        int drawn = 0;
+
+        for (Type type : types) {
+            IconSheet.Pos uv = sheet.pos(type);
             if (uv == null) continue;
+
             graphics.blit(
-                    TYPES_SHEET,
-                    x + i * (TypeIcon.TILE_W + GAP), y,
+                    texture,
+                    x + drawn * (sheet.tileW() + GAP), y,
                     uv.u(), uv.v(),
-                    TypeIcon.TILE_W, TypeIcon.TILE_H,
-                    TypeIcon.SHEET_W, TypeIcon.SHEET_H
+                    sheet.tileW(), sheet.tileH(),
+                    sheet.sheetW(), sheet.sheetH()
             );
-            i++;
+            drawn++;
         }
     }
 
-    private static ResourceLocation resolveTypesSheet() {
-        return ResourceLocation.fromNamespaceAndPath(Compat.getNameSpace(), Compat.TEXTURE_PATH);
+    public static int rowWidth(IconSheet sheet, int count) {
+        if (count <= 0) return 0;
+        return count * sheet.tileW() + (count - 1) * GAP;
     }
 
     public static void onResourcesReloaded() {
-        TYPES_SHEET = resolveTypesSheet();
+        typesSheet = resolve();
     }
 
-    public static int rowWidth(int count) {
-        if (count <= 0) return 0;
-        return count * TypeIcon.TILE_W + (count - 1) * GAP;
-    }
-
-    public static int rowHeight() {
-        return TypeIcon.TILE_H;
+    private static ResourceLocation resolve() {
+        return ResourceLocation.fromNamespaceAndPath(Compat.namespace(), Compat.TEXTURE_PATH);
     }
 }

@@ -16,6 +16,10 @@
     "WIND", "ELDRITCH", "BLOOD"
   ],
   "rules": [
+    {"attack":"Normal","defend":"Rock","mult":0.5},
+    {"attack":"Normal","defend":"Steel","mult":0.5},
+    {"attack":"Normal","defend":"Ghost","mult":0.0},
+
     {"attack":"Fire","defend":"Grass","mult":2.0},
     {"attack":"Fire","defend":"Ice","mult":2.0},
     {"attack":"Fire","defend":"Bug","mult":2.0},
