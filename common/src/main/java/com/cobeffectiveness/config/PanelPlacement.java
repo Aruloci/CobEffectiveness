@@ -88,9 +88,24 @@ public final class PanelPlacement {
         return placement;
     }
 
-    /** Above your move buttons, which is what it annotates. */
+    /**
+     * Rides under the effectiveness panel, completing one stack down the right edge.
+     *
+     * <p>It used to float against the bottom edge, which put it straight through Cobblemon's battle
+     * log: the log shares this corner at the same 12px inset and its collapsed frame occupies
+     * {@code 30 + 55} pixels up from the bottom. Raising the offset past that only moved the
+     * collision - at 1080p on auto GUI scale the screen is 270 scaled pixels tall, and the right
+     * column plus the log want 268 of them, so a bottom-anchored panel high enough to clear the log
+     * lands on the effectiveness panel instead.
+     *
+     * <p>Attaching solves what a number cannot: the stack cannot overlap itself however the matchup
+     * resizes it or however many multiplier rows are switched on. The anchor below stays as the
+     * fallback for when the effectiveness panel is off, and puts it in that panel's slot.
+     */
     public static PanelPlacement moves() {
-        return new PanelPlacement(Anchor.BOTTOM_RIGHT, 12, 46);
+        PanelPlacement placement = new PanelPlacement(Anchor.TOP_RIGHT, 12, 84);
+        placement.attach(PanelId.TYPES, EdgeLink.FAR_TO_FAR, EdgeLink.AFTER);
+        return placement;
     }
 
     public boolean isAttached() {

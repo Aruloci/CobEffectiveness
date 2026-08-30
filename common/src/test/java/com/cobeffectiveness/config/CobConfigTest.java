@@ -20,7 +20,13 @@ class CobConfigTest {
         assertEquals(List.of(Multiplier.X4, Multiplier.X2), config.shownInOrder());
         assertEquals(Anchor.TOP_RIGHT, config.namePanel.anchor, "the name sits under the tiles");
         assertEquals(Anchor.TOP_RIGHT, config.typesPanel.anchor, "effectiveness stacks under it");
-        assertEquals(Anchor.BOTTOM_RIGHT, config.movesPanel.anchor, "moves sit above the move buttons");
+        // Moves used to be anchored bottom-right on the theory that it sat above the move buttons.
+        // Those are bottom-*left* (Cobblemon puts them at x 20..217); what actually shares the
+        // bottom-right corner is the battle log, which the panel was drawn straight through. It
+        // rides the stack now, and the anchor is only the fallback for when effectiveness is off.
+        assertEquals(Anchor.TOP_RIGHT, config.movesPanel.anchor, "falls back into the effectiveness slot");
+        assertEquals(PanelId.TYPES, config.movesPanel.attachYTo, "moves rides under effectiveness");
+        assertEquals(PanelPlacement.EdgeLink.AFTER, config.movesPanel.attachY);
         assertTrue(config.namePanel.enabled);
         assertTrue(config.typesPanel.enabled);
         assertTrue(config.movesPanel.enabled);

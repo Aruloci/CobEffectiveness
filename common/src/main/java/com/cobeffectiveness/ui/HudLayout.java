@@ -25,6 +25,8 @@ public final class HudLayout {
     private static final int SECTION_GAP = 8;
     private static final int PANEL_GAP = 4;
     private static final int DIVIDER_H = 1;
+    /** How far a rule stops short of the content width at each end. */
+    private static final int DIVIDER_INSET = 3;
 
     /** Breathing room kept either side of the panels when deciding how wide a row may be. */
     private static final int SCREEN_MARGIN = 8;
@@ -42,7 +44,7 @@ public final class HudLayout {
     private static final String ELLIPSIS = "...";
 
     private static final int HEADING_COLOR = 0xFFFFFFFF;
-    private static final int SECTION_COLOR = 0xFFD0D0D0;
+    private static final int SECTION_COLOR = 0xFFF0F0F0;
 
     private HudLayout() {}
 
@@ -200,7 +202,11 @@ public final class HudLayout {
             int height = elementHeight(element, fontH, iconH);
 
             if (element.isDivider()) {
-                placed.add(new PlacedElement(element, innerX, cursorY, innerW, height, cursorY, 0, 0, 0));
+                // Short of the full content width: a rule that stops before the padding reads as a
+                // deliberate separator rather than a line that ran out of panel.
+                int inset = Math.min(DIVIDER_INSET, innerW / 4);
+                placed.add(new PlacedElement(element, innerX + inset, cursorY,
+                        Math.max(1, innerW - inset * 2), height, cursorY, 0, 0, 0));
             } else {
                 int labelW = element.labelWidth() > 0
                         ? element.labelWidth()

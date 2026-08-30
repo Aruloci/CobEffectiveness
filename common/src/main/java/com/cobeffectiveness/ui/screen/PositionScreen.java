@@ -10,6 +10,7 @@ import com.cobeffectiveness.config.PanelPlacement;
 import com.cobeffectiveness.type.EffectivenessChart;
 import com.cobeffectiveness.type.IconSheet;
 import com.cobeffectiveness.type.Type;
+import com.cobeffectiveness.ui.BattleSprites;
 import com.cobeffectiveness.ui.EffectivenessHud;
 import com.cobeffectiveness.ui.HudArrangement;
 import com.cobeffectiveness.ui.HudModel;
@@ -103,12 +104,13 @@ public class PositionScreen extends Screen {
 
         int hintY = this.height - BOTTOM_HUD_CLEARANCE - LINE_HEIGHT;
 
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 0xFFFFFFFF);
+        graphics.drawCenteredString(this.font, BattleSprites.styled(this.title),
+                this.width / 2, 16, 0xFFFFFFFF);
         graphics.drawCenteredString(this.font,
-                Component.translatable("cobeffectiveness.config.position_hint"),
+                BattleSprites.styled(Component.translatable("cobeffectiveness.config.position_hint")),
                 this.width / 2, hintY, 0xFFA0A0A0);
         graphics.drawCenteredString(this.font,
-                Component.translatable("cobeffectiveness.config.position_hint2"),
+                BattleSprites.styled(Component.translatable("cobeffectiveness.config.position_hint2")),
                 this.width / 2, hintY + LINE_HEIGHT, 0xFFA0A0A0);
     }
 

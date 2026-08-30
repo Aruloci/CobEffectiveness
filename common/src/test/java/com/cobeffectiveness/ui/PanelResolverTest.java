@@ -52,6 +52,72 @@ class PanelResolverTest {
         return PanelResolver.resolve(setup.sizes(), setup.placements(), SCREEN_W, SCREEN_H);
     }
 
+    /**
+     * Cobblemon's collapsed battle log occupies {@code 30 + 55} pixels up from the bottom of the
+     * screen, at the same right inset the panels use.
+     */
+    private static final int LOG_BAND = 85;
+
+    private static Map<PanelId, PanelResolver.Position> resolve(Setup setup, int width, int height) {
+        return PanelResolver.resolve(setup.sizes(), setup.placements(), width, height);
+    }
+
+    /** The three panels at a size a real singles matchup produces, measured from a running client. */
+    private static Setup shippedDefaults(int typesHeight) {
+        Setup setup = setup();
+        add(setup, PanelId.NAME, 78, 23, PanelPlacement.name());
+        add(setup, PanelId.TYPES, 66, typesHeight, PanelPlacement.types());
+        add(setup, PanelId.MOVES, 100, 72, PanelPlacement.moves());
+        return setup;
+    }
+
+    /**
+     * The shipped arrangement must never overlap itself, whatever the matchup or the row count does
+     * to the panels' heights.
+     *
+     * <p>The moves panel used to float against the bottom edge, which drew it straight through
+     * Cobblemon's battle log. Raising its offset past the log only moved the collision onto the
+     * effectiveness panel, because the right column and the log together want more height than a
+     * 270 pixel screen has. Riding the stack is what removes both at once, so what is pinned here is
+     * the relationship, not the number that happened to work.
+     */
+    @Test
+    void theShippedDefaultsStackWithoutOverlapping() {
+        for (int typesHeight : new int[] {39, 84}) {
+            for (int height : new int[] {270, 360, 540}) {
+                Map<PanelId, PanelResolver.Position> resolved = resolve(shippedDefaults(typesHeight), 640, height);
+
+                PanelResolver.Position name = resolved.get(PanelId.NAME);
+                PanelResolver.Position types = resolved.get(PanelId.TYPES);
+                PanelResolver.Position moves = resolved.get(PanelId.MOVES);
+
+                assertTrue(name.y() + 23 <= types.y(),
+                        "effectiveness panel must clear the name panel at " + height);
+                assertTrue(types.y() + typesHeight <= moves.y(),
+                        "moves panel must clear the effectiveness panel at " + height);
+
+                // Right edges flush, which is what FAR_TO_FAR records.
+                assertEquals(name.x() + 78, types.x() + 66, "right edges must stay flush");
+                assertEquals(types.x() + 66, moves.x() + 100, "right edges must stay flush");
+            }
+        }
+    }
+
+    /**
+     * On a screen with room, the stack also clears Cobblemon's battle log, which is the collision
+     * that made the old bottom-anchored default unusable. A 270 pixel screen - 1080p at auto GUI
+     * scale - is genuinely oversubscribed and is left to dragging, so it is not asserted here.
+     */
+    @Test
+    void theShippedDefaultsClearCobblemonsBattleLog() {
+        for (int height : new int[] {360, 540}) {
+            PanelResolver.Position moves = resolve(shippedDefaults(39), 640, height).get(PanelId.MOVES);
+
+            assertTrue(moves.y() + 72 <= height - LOG_BAND,
+                    "moves panel must sit above the battle log at " + height);
+        }
+    }
+
     @Test
     void aFreePanelResolvesFromItsAnchor() {
         Setup setup = setup();

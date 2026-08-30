@@ -50,9 +50,18 @@ public final class EffectivenessHud {
 
         for (HudLayout.Panel panel : placed.layout().panels()) {
             PanelRenderer.drawPanel(graphics, panel.x() + dx, panel.y() + dy, panel.width(), panel.height());
+            int moveRow = 0;
 
             for (HudLayout.PlacedElement element : panel.elements()) {
                 HudLayout.Element content = element.element();
+
+                // Shade every other move row across the whole panel, so the eye can carry a name to
+                // its multiplier three columns away. The stripe eats the gaps either side of the row
+                // so the banding is even.
+                if (content.kind() == HudLayout.Kind.MOVE_ROW && moveRow++ % 2 == 1) {
+                    PanelRenderer.drawRowStripe(graphics, panel.x() + dx + 2, element.y() + dy - 2,
+                            panel.width() - 4, element.height() + 4);
+                }
 
                 if (content.isDivider()) {
                     PanelRenderer.drawDivider(graphics, element.x() + dx, element.y() + dy, element.width());
@@ -62,7 +71,7 @@ public final class EffectivenessHud {
                 // Continuation lines of a wrapped row keep the label for alignment but must not
                 // print it again.
                 if (content.showLabel() && !content.text().isEmpty()) {
-                    graphics.drawString(font, content.text(),
+                    graphics.drawString(font, BattleSprites.text(content.text()),
                             element.x() + dx, element.textY() + dy, content.color());
                 }
 
@@ -72,7 +81,7 @@ public final class EffectivenessHud {
                 }
 
                 if (!content.trailing().isEmpty()) {
-                    graphics.drawString(font, content.trailing(),
+                    graphics.drawString(font, BattleSprites.text(content.trailing()),
                             element.trailingX() + dx, element.textY() + dy, content.trailingColor());
                 }
             }
@@ -107,7 +116,8 @@ public final class EffectivenessHud {
         return new HudLayout.Metrics() {
             @Override
             public int textWidth(String text) {
-                return font.width(text);
+                // Measured in the font it will be painted in, or every column would be misplaced.
+                return font.width(BattleSprites.text(text));
             }
 
             @Override

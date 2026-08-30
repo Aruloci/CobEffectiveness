@@ -21,7 +21,6 @@
   "cobeffectiveness.config.move": "Move panels...",
   "cobeffectiveness.config.move.tip": "Drag each panel where you want it. They snap to each other.",
   "cobeffectiveness.config.reset": "Reset to defaults",
-  "cobeffectiveness.config.reset.tip": "Put every setting and all three panel positions back to how they started.",
 
   "cobeffectiveness.config.position_title": "Drag the panels into place",
   "cobeffectiveness.config.position_hint": "Drag any panel to move it. They snap to each other.",
